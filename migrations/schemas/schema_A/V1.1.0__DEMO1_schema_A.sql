@@ -1,0 +1,1 @@
+CREATE SCHEMA IF NOT EXISTS {{ database_name }}.SCHEMA_A;

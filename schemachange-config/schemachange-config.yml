@@ -1,0 +1,23 @@
+config-version: 2
+
+schemachange:
+  # Root folder where all migration scripts exist
+  # This should be the parent folder that contains:
+  # database/, schemas/, schema_a/, schema_b/, schema_c/
+  root-folder: ./migrations
+
+  # Create change history table automatically (first run)
+  create-change-history-table: true
+
+  # Logging level (INFO is best for demos and debugging)
+  log-level: INFO
+
+  # Tag all queries executed by schemachange
+  query-tag: demo-schema-change
+
+snowflake:
+  # These are defaults for the Snowflake session
+  # Actual credentials come from GitHub Secrets
+  role: DEMO1_ROLE
+  warehouse: COMPUTE_WH
+  database: DEMO1_DB
