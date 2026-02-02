@@ -1,0 +1,59 @@
+name: Snowflake Schema Change Deployment
+
+on:
+  push:
+    branches:
+      - "**"
+  workflow_dispatch:
+
+jobs:
+  schemachange-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Set environment (dev vs prod)
+      - name: Set deployment environment
+        run: |
+          if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
+            echo "DB_NAME=DEMO1_PROD_DB" >> $GITHUB_ENV
+          else
+            echo "DB_NAME=DEMO1_DEV_DB" >> $GITHUB_ENV
+          fi
+
+      # 3️⃣ Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      # 4️⃣ Install schemachange
+      - name: Install schemachange
+        run: |
+          pip install --upgrade pip
+          pip install schemachange
+
+      # 5️⃣ Write Snowflake private key to file
+      - name: Write private key to file
+        run: |
+          echo "${{ secrets.DEMO_PRIVATE_KEY }}" > snowflake_key.p8
+          chmod 600 snowflake_key.p8
+
+      # 6️⃣ Run schemachange
+      - name: Run schemachange deploy
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.DEMO_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.DEMO_USER }}
+          SNOWFLAKE_ROLE: ${{ secrets.DEMO_ROLE }}
+          SNOWFLAKE_WAREHOUSE: ${{ secrets.DEMO_WAREHOUSE }}
+          SNOWFLAKE_AUTHENTICATOR: snowflake_jwt
+          SNOWFLAKE_PRIVATE_KEY_FILE: snowflake_key.p8
+        run: |
+          schemachange deploy \
+            --root-folder migrations \
+            --change-history-table ${DB_NAME}.SCHEMACHANGE.CHANGE_HISTORY \
+            --create-change-history-table \
+            --vars "{\"database_name\":\"${DB_NAME}\"}"
