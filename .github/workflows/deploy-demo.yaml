@@ -1,9 +1,16 @@
 name: Snowflake Schema Change Deployment
 
+
 on:
   push:
     branches:
       - "**"
+  pull_request:
+    branches:
+      - dev
+      - main
+    
+      
   workflow_dispatch:
 
 jobs:
