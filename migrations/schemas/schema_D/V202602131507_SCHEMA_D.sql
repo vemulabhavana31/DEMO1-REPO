@@ -1,0 +1,1 @@
+CREATE  OR ALTER SCHEMA {{ database_name }}.SCHEMA_D;
