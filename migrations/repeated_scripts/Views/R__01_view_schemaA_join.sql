@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW {{ database_name }}.SCHEMA_A.V_A_JOIN AS
+CREATE OR REPLACE VIEW {{ database_name }}.SCHEMA_A.VW_A_JOIN AS
 SELECT
     A.id,
     A.name,

@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW {{ database_name }}.SCHEMA_B.V_B_JOIN AS
+CREATE OR REPLACE VIEW {{ database_name }}.SCHEMA_B.VW_B_JOIN AS
 SELECT
     B1.sales_id,
     B1.price,
